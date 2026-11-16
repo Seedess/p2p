@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Seedess p2p basic example</title>
+    <style>
+      body { margin: 0; background: #070b14; color: #eef4ff; font: 15px/1.6 -apple-system, sans-serif; }
+      main { max-width: 860px; margin: 0 auto; padding: 48px 24px; }
+      video { width: 100%; aspect-ratio: 16 / 9; background: #000; border-radius: 12px; }
+      code { color: #57d7ff; }
+      pre { color: #8df0c8; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Seedess p2p basic example</h1>
+      <p>
+        Replace <code>STREAM</code> and <code>TOKEN</code> with a stream id and its
+        <code>pk_…</code> token. One call creates the player and joins the mesh.
+      </p>
+      <video id="video" controls playsinline></video>
+      <pre id="stats"></pre>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+    <script type="module">
+      import { createPlayer } from 'https://seedess.com/p2p.js';
+
+      const STREAM = 'demo';
+      const TOKEN = 'pk_…';
+
+      const video = document.getElementById('video');
+      const stats = document.getElementById('stats');
+
+      const player = await createPlayer(video, { stream: STREAM, token: TOKEN });
+
+      player.on('stats', (value) => {
+        stats.textContent = JSON.stringify(value, null, 2);
+      });
+    </script>
+  </body>
+</html>

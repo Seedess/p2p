@@ -44,7 +44,7 @@ function optionsFor(url, hls) {
     if (resolved === null) return null;
     if (resolved) return { ...base, ...resolved, resolve: undefined };
   }
-  const room = base.room ?? param('room') ?? hashKey(String(url));
+  const room = base.room ?? base.stream ?? param('room') ?? hashKey(String(url));
   return { ...base, room, resolve: undefined };
 }
 
