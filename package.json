@@ -1,0 +1,66 @@
+{
+  "name": "@seedess/p2p",
+  "version": "0.1.0",
+  "description": "Universal Seedess entry: picks the right player adapter at runtime, or import a specific adapter.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./src/index.js",
+  "module": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./auto": "./src/auto.js",
+    "./hls": "./src/hls.js",
+    "./videojs": "./src/videojs.js",
+    "./dash": "./src/dash.js",
+    "./core": "./src/core.js"
+  },
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "keywords": [
+    "p2p",
+    "webrtc",
+    "peer-assisted",
+    "video",
+    "hls",
+    "dash",
+    "videojs",
+    "seedess"
+  ],
+  "scripts": {
+    "check": "node --check src/index.js && node --check src/auto.js && node --check src/hls.js && node --check src/videojs.js && node --check src/dash.js && node --check src/core.js",
+    "prepack": "npm run check"
+  },
+  "dependencies": {
+    "@seedess/core": "0.1.0",
+    "@seedess/hls-p2p": "0.1.0",
+    "@seedess/videojs-p2p": "0.1.0",
+    "@seedess/dash-p2p": "0.1.0"
+  },
+  "peerDependencies": {
+    "hls.js": ">=1.5.0",
+    "video.js": ">=8.0.0",
+    "dash.js": ">=4.7.0"
+  },
+  "peerDependenciesMeta": {
+    "hls.js": {
+      "optional": true
+    },
+    "video.js": {
+      "optional": true
+    },
+    "dash.js": {
+      "optional": true
+    }
+  },
+  "homepage": "https://seedess.com/docs/libraries/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Seedess/p2p.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Seedess/p2p/issues"
+  }
+}
