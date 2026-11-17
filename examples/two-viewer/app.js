@@ -8,7 +8,7 @@
  * Metrics are the adapter's per-player counters, plus a smoothed byte rate.
  */
 
-import { attach, createPlayer } from 'https://seedess.com/p2p.js?v=16';
+import { attach, createPlayer } from 'https://seedess.com/p2p.js?v=18';
 
 const $ = (id) => document.getElementById(id);
 const videoA = $('video-a');
@@ -232,8 +232,10 @@ async function start() {
   }
 
   const absolute = (path) => new URL(path, 'https://seedess.com').toString();
+  const room = `demo-${(crypto.randomUUID?.() ?? Math.random().toString(36).slice(2)).slice(0, 8)}`;
   const options = {
-    room: config.id,
+    room,
+    stream: config.id,
     signalingUrl: absolute(config.signaling),
     configUrl: absolute(config.config),
     haveWaitMs: 800,
