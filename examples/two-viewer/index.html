@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Seedess — two-viewer peer demo</title>
+  <meta name="description" content="Two players, one stream. Watch the second viewer receive segments from the first over WebRTC." />
+  <meta name="theme-color" content="#070b14" />
+  <meta name="robots" content="noindex,follow" />
+  <link rel="canonical" href="https://seedess.com/demo/" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="masthead">
+    <span class="eyebrow">Peer-assisted video delivery</span>
+    <h1>Two viewers. One stream.</h1>
+    <p class="lede">
+      Viewer A starts and pulls segments from the CDN. Viewer B joins the same room a moment
+      later and receives the segments Viewer A already has — over WebRTC. The counters below
+      show where every byte came from.
+    </p>
+  </header>
+
+  <main>
+    <section class="peer-map" id="peer-map" aria-label="Peer connection">
+      <div class="peer-node peer-a" id="peer-node-a">
+        <span class="peer-pulse"></span>
+        <span class="peer-node-name">Viewer A</span>
+        <span class="peer-node-role" id="peer-role-a">CDN</span>
+      </div>
+      <div class="peer-link">
+        <svg viewBox="0 0 360 64" preserveAspectRatio="none" aria-hidden="true">
+          <path class="peer-line" d="M8 32 C 100 32, 260 32, 352 32" />
+          <path class="peer-flow" d="M8 32 C 100 32, 260 32, 352 32" />
+        </svg>
+        <span class="peer-link-label" id="peer-link-label">no peer link</span>
+      </div>
+      <div class="peer-node peer-b" id="peer-node-b">
+        <span class="peer-pulse"></span>
+        <span class="peer-node-name">Viewer B</span>
+        <span class="peer-node-role" id="peer-role-b">Waiting</span>
+      </div>
+    </section>
+
+    <section class="stage" aria-label="Two viewers">
+      <article class="viewer" data-viewer="a">
+        <header class="viewer-head">
+          <div>
+            <p class="viewer-title">Viewer A</p>
+            <p class="viewer-sub">Starts first, warms the cache</p>
+          </div>
+          <span class="badge badge-cdn" id="a-badge">CDN</span>
+        </header>
+        <video id="video-a" controls playsinline muted></video>
+        <p class="viewer-status" id="a-status">Waiting for the demo stream…</p>
+
+        <div class="metrics">
+          <div class="metric">
+            <span class="metric-label">CDN bytes</span>
+            <span class="metric-value" id="a-cdn">0 B</span>
+            <span class="metric-rate" id="a-cdn-rate">0 B/s</span>
+          </div>
+          <div class="metric metric-p2p">
+            <span class="metric-label">P2P bytes</span>
+            <span class="metric-value" id="a-p2p">0 B</span>
+            <span class="metric-rate" id="a-p2p-rate">0 B/s</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Offload</span>
+            <span class="metric-value" id="a-offload">0%</span>
+            <span class="metric-rate">of total bytes</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Peers</span>
+            <span class="metric-value" id="a-peers">0</span>
+            <span class="metric-rate">connected</span>
+          </div>
+        </div>
+
+        <div class="breakdown">
+          <div class="row"><span>Segments from CDN</span><span id="a-seg-http">0</span></div>
+          <div class="row"><span>Segments from peers</span><span id="a-seg-p2p">0</span></div>
+          <div class="row"><span>Fallbacks</span><span id="a-fallbacks">0</span></div>
+          <div class="row"><span>Hash failures</span><span id="a-hash">0</span></div>
+        </div>
+      </article>
+
+      <article class="viewer" data-viewer="b">
+        <header class="viewer-head">
+          <div>
+            <p class="viewer-title">Viewer B</p>
+            <p class="viewer-sub">Joins late, should feed from A</p>
+          </div>
+          <span class="badge" id="b-badge">Waiting</span>
+        </header>
+        <video id="video-b" controls playsinline muted></video>
+        <p class="viewer-status" id="b-status">Waiting for Viewer A to seed…</p>
+
+        <div class="metrics">
+          <div class="metric">
+            <span class="metric-label">CDN bytes</span>
+            <span class="metric-value" id="b-cdn">0 B</span>
+            <span class="metric-rate" id="b-cdn-rate">0 B/s</span>
+          </div>
+          <div class="metric metric-p2p">
+            <span class="metric-label">P2P bytes</span>
+            <span class="metric-value" id="b-p2p">0 B</span>
+            <span class="metric-rate" id="b-p2p-rate">0 B/s</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Offload</span>
+            <span class="metric-value" id="b-offload">0%</span>
+            <span class="metric-rate">of total bytes</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Peers</span>
+            <span class="metric-value" id="b-peers">0</span>
+            <span class="metric-rate">connected</span>
+          </div>
+        </div>
+
+        <div class="breakdown">
+          <div class="row"><span>Segments from CDN</span><span id="b-seg-http">0</span></div>
+          <div class="row"><span>Segments from peers</span><span id="b-seg-p2p">0</span></div>
+          <div class="row"><span>Fallbacks</span><span id="b-fallbacks">0</span></div>
+          <div class="row"><span>Hash failures</span><span id="b-hash">0</span></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="summary" aria-label="Combined delivery">
+      <div class="summary-head">
+        <div>
+          <p class="summary-title">Combined delivery</p>
+          <p class="summary-sub" id="global-status">Starting the demo…</p>
+        </div>
+        <div class="offload-ring">
+          <span class="offload-value" id="total-offload">0%</span>
+          <span class="offload-label">from peers</span>
+        </div>
+      </div>
+
+      <div class="summary-grid">
+        <div class="summary-metric">
+          <span class="metric-label">CDN bytes</span>
+          <span class="metric-value" id="total-cdn">0 B</span>
+        </div>
+        <div class="summary-metric">
+          <span class="metric-label">P2P bytes</span>
+          <span class="metric-value metric-green" id="total-p2p">0 B</span>
+        </div>
+        <div class="summary-metric">
+          <span class="metric-label">Peer bandwidth</span>
+          <span class="metric-value metric-green" id="total-rate">0 B/s</span>
+        </div>
+        <div class="summary-metric">
+          <span class="metric-label">Peer links</span>
+          <span class="metric-value" id="total-peers">0</span>
+        </div>
+      </div>
+
+      <div class="bar" role="progressbar" aria-label="Peer offload" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="offload-bar-wrap">
+        <span class="bar-fill" id="offload-bar"></span>
+      </div>
+    </section>
+
+    <section class="quickstart" aria-labelledby="quickstart-title">
+      <p class="eyebrow">Implement it</p>
+      <h2 id="quickstart-title">Add it to your page</h2>
+      <p class="quickstart-lede">
+        Create one stream on your server, then hand the page its id and public token.
+        The adapter derives the master, signaling and config URLs.
+      </p>
+
+      <p class="quickstart-step">1. Server — create the stream</p>
+      <pre><code>curl -s https://seedess.com/api/v1/streams \
+  -H "Authorization: Bearer key_…" \
+  -H "Content-Type: application/json" \
+  -d '{"url":"https://origin.example/master.m3u8","id":"demo"}'</code></pre>
+
+      <p class="quickstart-step">2. Page — one player</p>
+      <pre><code>import { createPlayer } from 'https://seedess.com/p2p.js';
+
+const player = await createPlayer(document.querySelector('video'), {
+  stream: 'demo',
+  token: 'pk_…',
+});
+
+player.on('stats', console.log);</code></pre>
+
+      <p class="quickstart-step">3. Or patch every hls.js player</p>
+      <pre><code>import { auto } from 'https://seedess.com/p2p.js';
+
+auto({ stream: 'demo', token: 'pk_…' });
+
+const hls = new Hls();
+hls.loadSource(masterUrl);
+hls.attachMedia(video);</code></pre>
+
+      <p class="quickstart-links">
+        <a href="/docs/quickstart/">Read the quickstart</a>
+        <span>·</span>
+        <a href="/docs/api/">API reference</a>
+        <span>·</span>
+        <a href="https://github.com/Seedess/p2p/tree/main/examples">Source on GitHub</a>
+      </p>
+    </section>
+    <p class="note">
+      Both videos are the same stream and muted for autoplay. Viewer A seeds the segments it
+      has already fetched; Viewer B joins the same signaling room and requests them over
+      WebRTC. When no peer has a segment, the player falls back to the CDN.
+    </p>
+  </main>
+
+  <footer>
+    <p>One-line rollback: remove the adapter and the player is stock hls.js again.</p>
+    <p><a href="/">seedess.com</a> · <a href="/docs/">Docs</a> · <a href="/docs/api/">API</a></p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1/dist/hls.min.js"></script>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

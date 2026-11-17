@@ -90,6 +90,13 @@ when the seam is missing.
 
 Full adapter options are in [`@seedess/hls-p2p`](../hls-p2p).
 
+## Examples
+
+- [`examples/two-viewer`](./examples/two-viewer) — a complete two-player demo with a live
+  peer map and CDN/peer metrics.
+- [`examples/basic`](./examples/basic) — one player with `createPlayer`.
+- [`examples/all-videos`](./examples/all-videos) — `auto()` patches hls.js once.
+
 ## Packages
 
 - [`@seedess/core`](../core) — mesh, signaling, verification.

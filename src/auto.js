@@ -16,6 +16,8 @@
  * for it for `watchMs` (default 15s).
  */
 
+import { attach } from '@seedess/hls-p2p';
+
 let hlsPatched = false;
 let hlsOptions = null;
 
@@ -62,14 +64,8 @@ function installHls(HlsGlobal) {
     const options = optionsFor(url, self);
     if (!options) return original.call(self, url);
 
-    // Resolve the adapter only when a player actually loads a source, so pages
-    // that never play video pay no cost.
-    import('@seedess/hls-p2p')
-      .then(({ attach }) => {
-        if (!self.seedess) self.seedess = attach(self, options);
-        original.call(self, url);
-      })
-      .catch(() => original.call(self, url));
+    if (!self.seedess) self.seedess = attach(self, options);
+    original.call(self, url);
     return undefined;
   };
 
