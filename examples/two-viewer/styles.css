@@ -459,13 +459,13 @@ footer a { color: var(--accent); text-decoration: none; }
   text-transform: uppercase;
 }
 
-.quickstart pre {
+.quickstart .codebox pre {
   margin: 0;
   padding: 14px 16px;
   overflow-x: auto;
-  background: #04070d;
-  border: 1px solid var(--border);
-  border-radius: 10px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
   color: #c8d7ee;
   font-size: 0.8rem;
   line-height: 1.55;

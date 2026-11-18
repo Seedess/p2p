@@ -8,6 +8,7 @@
   <meta name="theme-color" content="#070b14" />
   <meta name="robots" content="noindex,follow" />
   <link rel="canonical" href="https://seedess.com/demo/" />
+  <link rel="stylesheet" href="https://seedess.com/codebox.css?v=3" />
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
@@ -173,29 +174,29 @@
       </p>
 
       <p class="quickstart-step">1. Server — create the stream</p>
-      <pre><code>curl -s https://seedess.com/api/v1/streams \
+      <div class="codebox" data-lang="bash"><pre><code>curl -s https://seedess.com/api/v1/streams \
   -H "Authorization: Bearer key_…" \
   -H "Content-Type: application/json" \
-  -d '{"url":"https://origin.example/master.m3u8","id":"demo"}'</code></pre>
+  -d '{"url":"https://origin.example/master.m3u8","id":"demo"}'</code></pre></div>
 
       <p class="quickstart-step">2. Page — one player</p>
-      <pre><code>import { createPlayer } from 'https://seedess.com/p2p.js';
+      <div class="codebox" data-lang="js"><pre><code>import { createPlayer } from 'https://seedess.com/p2p.js';
 
 const player = await createPlayer(document.querySelector('video'), {
   stream: 'demo',
   token: 'pk_…',
 });
 
-player.on('stats', console.log);</code></pre>
+player.on('stats', console.log);</code></pre></div>
 
       <p class="quickstart-step">3. Or patch every hls.js player</p>
-      <pre><code>import { auto } from 'https://seedess.com/p2p.js';
+      <div class="codebox" data-lang="js"><pre><code>import { auto } from 'https://seedess.com/p2p.js';
 
 auto({ stream: 'demo', token: 'pk_…' });
 
 const hls = new Hls();
 hls.loadSource(masterUrl);
-hls.attachMedia(video);</code></pre>
+hls.attachMedia(video);</code></pre></div>
 
       <p class="quickstart-links">
         <a href="/docs/quickstart/">Read the quickstart</a>
@@ -218,6 +219,7 @@ hls.attachMedia(video);</code></pre>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/hls.js@1/dist/hls.min.js"></script>
+  <script src="https://seedess.com/codebox.js?v=3" defer></script>
   <script type="module" src="./app.js"></script>
 </body>
 </html>
